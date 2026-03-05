@@ -1,0 +1,7 @@
+{
+  "name": "Crosspector PRO",
+  "description": "Premium multi-market discovery engine utilizing advanced Gemini models and Google Search to identify high-spread opportunities across global and local markets.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
