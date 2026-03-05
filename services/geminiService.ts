@@ -77,6 +77,8 @@ export async function findOpportunities(category: MarketCategory, locationContex
   }
   const ai = new GoogleGenAI({ apiKey: effectiveKey });
 
+  // Gemini 2.5 Flash with Tools does not support JSON mode directly.
+  // We must ask for JSON in the prompt and parse it manually.
   const prompt = `
     Act as a hyper-intelligent Arbitrage Hunter. Your job is to find UNCONVENTIONAL ways to make money right now in the ${category} sector.
     
@@ -103,6 +105,33 @@ export async function findOpportunities(category: MarketCategory, locationContex
     `}
     
     Every opportunity MUST have a direct URL to a real listing. Use Google Search to verify current prices from the last 12 hours.
+
+    OUTPUT FORMAT:
+    You must return a valid JSON array of objects. Do not wrap the JSON in markdown code blocks. Just return the raw JSON string.
+    The JSON structure must match this schema:
+    [
+      {
+        "name": "string",
+        "category": "string",
+        "predictedProfitPercent": number,
+        "riskLevel": "Low" | "Medium" | "High",
+        "profitPer1000": number,
+        "minInvestment": number,
+        "confidenceScore": number,
+        "sourceUrl": "string",
+        "sourceName": "string",
+        "sentiment": "Bullish" | "Neutral" | "Bearish",
+        "trendReasoning": "string",
+        "marketDataPoint": "string",
+        "buyPrice": "string",
+        "sellPrice": "string",
+        "type": "IMMEDIATE_FLIP" | "STRATEGIC_ASSET" | "LOCAL_GEM",
+        "timeToProfit": "string",
+        "strategyType": "string",
+        "secretSauce": "string",
+        "instructions": ["string"]
+      }
+    ]
   `;
 
   const response = await callWithRetry(() => ai.models.generateContent({
@@ -110,13 +139,15 @@ export async function findOpportunities(category: MarketCategory, locationContex
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }],
-      responseMimeType: "application/json",
-      responseSchema: OPPORTUNITY_SCHEMA,
+      // responseMimeType and responseSchema are NOT supported with tools in this model version
     },
   }));
 
   try {
-    const text = response.text || "[]";
+    let text = response.text || "[]";
+    // Clean up markdown if the model adds it despite instructions
+    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    
     const results = JSON.parse(text);
     return results.map((item: any, index: number) => ({
       ...item,
