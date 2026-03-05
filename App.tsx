@@ -32,7 +32,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // Check for environment variable key first
-    const envKey = import.meta.env.VITE_GEMINI_API_KEY;
+    // We check both VITE_ prefixed (standard) and process.env (defined in vite.config)
+    const envKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
     if (envKey) {
       setApiKey(envKey);
       setIsAuthorized(true);
@@ -59,13 +60,15 @@ const App: React.FC = () => {
   };
 
   const handleKeySwitch = () => {
-    // If using env key, prevent switching (or maybe allow overriding? For now, let's just clear session)
+    // If using env key, do not allow switching/logging out via this method
+    // unless we want to allow overriding.
+    const envKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+    if (envKey) {
+       addLog("Cannot switch API key: Using system-configured key.", 'warning');
+       return;
+    }
+
     sessionStorage.removeItem('userApiKey');
-    
-    // If env key exists, we can't really "switch" away from it unless we add logic to ignore it.
-    // But for this user request, they want to hide the auth screen.
-    // If they click switch, they probably want to enter a DIFFERENT key.
-    // So let's clear the state.
     setApiKey('');
     setIsAuthorized(false);
   };
@@ -97,8 +100,14 @@ const App: React.FC = () => {
           break;
         case 401:
         case 403:
-          addLog(`[Auth] ${category}: Invalid API Key. Please re-enter your key.`, 'error');
-          handleKeySwitch();
+          addLog(`[Auth] ${category}: Invalid API Key or Permissions.`, 'error');
+          // Only force logout if NOT using an environment key
+          const envKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+          if (!envKey) {
+             handleKeySwitch();
+          } else {
+             addLog(`[System] The configured API Key is being rejected. Check Vercel settings.`, 'error');
+          }
           break;
         case 500:
         case 503:
