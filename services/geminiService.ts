@@ -57,7 +57,8 @@ async function callWithRetry(fn: () => Promise<any>, maxRetries = 3): Promise<an
       const status = error?.status || error?.code;
       
       if (status === 429 && i < maxRetries - 1) {
-        const backoffTime = Math.pow(2, i + 1) * 3000; 
+        // Aggressive backoff for free tier: 10s, 20s, 40s
+        const backoffTime = Math.pow(2, i + 1) * 5000; 
         console.warn(`Rate limit hit (429). Retrying in ${backoffTime}ms...`);
         await sleep(backoffTime);
         continue;
@@ -105,13 +106,12 @@ export async function findOpportunities(category: MarketCategory, locationContex
   `;
 
   const response = await callWithRetry(() => ai.models.generateContent({
-    model: "gemini-3-pro-preview",
+    model: "gemini-2.5-flash",
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }],
       responseMimeType: "application/json",
       responseSchema: OPPORTUNITY_SCHEMA,
-      thinkingConfig: { thinkingBudget: 4000 }
     },
   }));
 

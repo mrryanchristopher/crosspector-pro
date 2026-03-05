@@ -149,7 +149,8 @@ const App: React.FC = () => {
         setCurrentCategoryIndex(i);
         
         if (i > 0) {
-          await sleep(2000); 
+          // Increased delay to 5 seconds to respect free tier rate limits (15 RPM)
+          await sleep(5000); 
         }
 
         addLog(`[Agent] Pro-Scraping ${cat}...`, 'info');
@@ -278,7 +279,7 @@ const App: React.FC = () => {
                 {status === AutomationStatus.PROCESSING ? (
                   <>
                     <i className="fas fa-atom fa-spin"></i>
-                    <span>SCRAPING WEB...</span>
+                    <span>SCANNING (SAFE MODE)...</span>
                   </>
                 ) : (
                   <>
