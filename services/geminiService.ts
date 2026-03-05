@@ -69,10 +69,12 @@ async function callWithRetry(fn: () => Promise<any>, maxRetries = 3): Promise<an
 }
 
 export async function findOpportunities(category: MarketCategory, locationContext: string | undefined, apiKey: string): Promise<Opportunity[]> {
-  if (!apiKey) {
+  const effectiveKey = apiKey || import.meta.env.VITE_GEMINI_API_KEY;
+  
+  if (!effectiveKey) {
     throw new GeminiError("API Key not provided.", 401);
   }
-  const ai = new GoogleGenAI({ apiKey });
+  const ai = new GoogleGenAI({ apiKey: effectiveKey });
 
   const prompt = `
     Act as a hyper-intelligent Arbitrage Hunter. Your job is to find UNCONVENTIONAL ways to make money right now in the ${category} sector.

@@ -31,6 +31,15 @@ const App: React.FC = () => {
   const [userLocation, setUserLocation] = useState<string | null>(null);
 
   useEffect(() => {
+    // Check for environment variable key first
+    const envKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (envKey) {
+      setApiKey(envKey);
+      setIsAuthorized(true);
+      return;
+    }
+
+    // Fallback to stored user key
     const storedKey = sessionStorage.getItem('userApiKey');
     if (storedKey) {
       setApiKey(storedKey);
@@ -50,7 +59,13 @@ const App: React.FC = () => {
   };
 
   const handleKeySwitch = () => {
+    // If using env key, prevent switching (or maybe allow overriding? For now, let's just clear session)
     sessionStorage.removeItem('userApiKey');
+    
+    // If env key exists, we can't really "switch" away from it unless we add logic to ignore it.
+    // But for this user request, they want to hide the auth screen.
+    // If they click switch, they probably want to enter a DIFFERENT key.
+    // So let's clear the state.
     setApiKey('');
     setIsAuthorized(false);
   };
