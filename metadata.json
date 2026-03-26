@@ -1,6 +1,6 @@
 {
-  "name": "Crosspector PRO",
-  "description": "Premium multi-market discovery engine utilizing advanced Gemini models and Google Search to identify high-spread opportunities across global and local markets.",
+  "name": "Crosspector",
+  "description": "Premium local arbitrage discovery engine utilizing advanced Gemini models and Google Search to identify high-spread opportunities in your area.",
   "requestFramePermissions": [
     "geolocation"
   ]

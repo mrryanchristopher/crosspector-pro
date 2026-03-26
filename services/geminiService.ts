@@ -106,8 +106,14 @@ export async function findOpportunities(category: MarketCategory, locationContex
     
     Every opportunity MUST have a direct URL to a real listing. Use Google Search to verify current prices from the last 12 hours.
 
+    LIMIT: Return a maximum of 10 opportunities per scan.
+
     OUTPUT FORMAT:
-    You must return a valid JSON array of objects. Do not wrap the JSON in markdown code blocks. Just return the raw JSON string.
+    You must return a valid JSON array of objects.
+    CRITICAL: DO NOT include any conversational text, apologies, or explanations before or after the JSON.
+    CRITICAL: DO NOT wrap the JSON in markdown code blocks.
+    Just return the raw JSON string starting with '[' and ending with ']'.
+    
     The JSON structure must match this schema:
     [
       {
@@ -144,7 +150,13 @@ export async function findOpportunities(category: MarketCategory, locationContex
   }));
 
   try {
-    let text = response.text || "[]";
+    const rawText = response.text || "[]";
+    
+    // Extract the JSON array using regex to handle conversational prefixes/suffixes
+    // This looks for the first '[' and the last ']'
+    const jsonMatch = rawText.match(/\[[\s\S]*\]/);
+    let text = jsonMatch ? jsonMatch[0] : "[]";
+    
     // Clean up markdown if the model adds it despite instructions
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
     
@@ -156,6 +168,7 @@ export async function findOpportunities(category: MarketCategory, locationContex
     }));
   } catch (error) {
     console.error(`Error parsing ${category} results:`, error);
-    throw new GeminiError("Failed to parse AI response into valid arbitrage data.", 500);
+    console.debug("Raw AI Response:", response.text);
+    throw new GeminiError("The AI returned a conversational response instead of data. Please try again.", 500);
   }
 }

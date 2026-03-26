@@ -8,13 +8,22 @@ import { OpportunityCard } from './components/OpportunityCard';
 
 const CATEGORIES: MarketCategory[] = [
   'Local Listings',
-  'Crypto', 
-  'Stocks', 
-  'Precious Metals',
-  'Creative Schemes',
   'Retail Arbitrage',
   'Thrift/Resale', 
   'Liquidation'
+];
+
+const MONEY_TIPS = [
+  "Buy low, sell high, keep the difference.",
+  "Price is what you pay. Value is what you get.",
+  "Opportunities are like sunrises. If you wait too long, you miss them.",
+  "Invest in yourself. It pays the best interest.",
+  "Consistency is the secret sauce to any successful flip.",
+  "Your network is your net worth.",
+  "The goal isn't more money. The goal is living life on your terms.",
+  "Don't work for money; make money work for you.",
+  "Wealth is the ability to fully experience life.",
+  "The best time to start was yesterday. The second best time is now."
 ];
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -29,6 +38,14 @@ const App: React.FC = () => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(-1);
   const [userLocation, setUserLocation] = useState<string | null>(null);
+  const [tipIndex, setTipIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTipIndex((prev) => (prev + 1) % MONEY_TIPS.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Check for environment variable key first
@@ -188,7 +205,7 @@ const App: React.FC = () => {
             <i className="fas fa-flask text-black text-3xl font-bold"></i>
           </div>
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tighter mb-2">CROSSPECTOR<span className="text-green-500">PRO</span></h1>
+            <h1 className="text-3xl font-black text-white tracking-tighter mb-2">CROSSPECTOR</h1>
             <p className="text-gray-400 text-sm leading-relaxed">
               Enter your Google AI API Key to unlock the hyper-velocity market scanner.
             </p>
@@ -245,12 +262,14 @@ const App: React.FC = () => {
           <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.5)]">
             <i className="fas fa-flask text-black font-bold"></i>
           </div>
-          <h1 className="text-xl font-black tracking-tighter text-white">CROSSPECTOR<span className="text-green-500">PRO</span></h1>
+          <h1 className="text-xl font-black tracking-tighter text-white">CROSSPECTOR</h1>
         </div>
         <div className="flex items-center space-x-4">
-          <div className="hidden md:flex items-center space-x-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
-             <span className="text-[9px] font-black text-green-500 uppercase">Pro Access Active</span>
-             <i className="fas fa-shield-check text-green-500 text-[10px]"></i>
+          <div className="hidden md:flex items-center space-x-3 px-4 py-1.5 bg-white/5 rounded-full border border-white/10 max-w-xs lg:max-w-md overflow-hidden">
+             <i className="fas fa-lightbulb text-yellow-500 text-[10px] animate-pulse shrink-0"></i>
+             <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider truncate animate-in fade-in slide-in-from-right-4 duration-1000">
+               {MONEY_TIPS[tipIndex]}
+             </span>
           </div>
           <div className="flex items-center space-x-2 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
             <i className={`fas fa-circle text-[6px] ${status === AutomationStatus.PROCESSING ? 'text-green-500 animate-pulse' : 'text-gray-600'}`}></i>
@@ -300,13 +319,6 @@ const App: React.FC = () => {
                 </div>
               )}
               
-              <button 
-                onClick={handleKeySwitch}
-                className="w-full mt-4 py-2 border border-white/10 text-gray-500 hover:text-white hover:border-white/20 transition-all rounded-lg text-[9px] uppercase font-black tracking-widest"
-              >
-                Switch API Key
-              </button>
-
               <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-white/5">
                 <button 
                   onClick={() => exportToPDF(opportunities)}
@@ -396,8 +408,19 @@ const App: React.FC = () => {
         <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">
           © 2026 <a href="https://mediamultitool.com" target="_blank" rel="noopener noreferrer" className="text-green-500 hover:text-green-400 transition-colors underline decoration-green-500/30 underline-offset-4">Media Multi-Tool</a>
         </p>
+        <div className="pt-4">
+          <a 
+            href="https://www.buymeacoffee.com/themediamultitool" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-2 px-4 py-2 bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-black font-bold rounded-full transition-all active:scale-95"
+          >
+            <i className="fas fa-coffee"></i>
+            <span>Buy Me a Coffee</span>
+          </a>
+        </div>
         <p className="text-gray-700 text-[9px] max-w-2xl mx-auto mt-4 px-4 leading-relaxed">
-          DISCLAIMER: This application is for informational and entertainment purposes only. The data provided does not constitute financial, investment, or legal advice. Market conditions change rapidly; always conduct your own due diligence before making any financial decisions. Crosspector PRO and its creators assume no liability for financial losses.
+          DISCLAIMER: This application is for informational and entertainment purposes only. The data provided does not constitute financial, investment, or legal advice. Market conditions change rapidly; always conduct your own due diligence before making any financial decisions. Crosspector and its creators assume no liability for financial losses.
         </p>
       </footer>
     </div>
