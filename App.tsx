@@ -337,6 +337,40 @@ const App: React.FC = () => {
               </div>
             </div>
 
+            <div className="glass-panel p-6 rounded-2xl border border-yellow-500/20 bg-yellow-500/5 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40 transition-opacity">
+                <i className="fas fa-crown text-yellow-500 text-4xl -rotate-12"></i>
+              </div>
+              <h2 className="text-[10px] font-black text-yellow-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                <i className="fas fa-star"></i>
+                Crosspector Pro
+              </h2>
+              <p className="text-xs text-gray-300 font-medium leading-relaxed mb-4">
+                Unlock the full power of the engine on the <span className="text-white font-bold">Google Play Store</span>.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {[
+                  'Crypto Arbitrage Spreads',
+                  'Stock & Precious Metals',
+                  'Unlimited Daily Scans',
+                  '50+ Results Per Session',
+                  'No Sign Up Required',
+                  'One-Time Payment - No Subs'
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                    <i className="fas fa-check text-green-500 text-[8px]"></i>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <button 
+                disabled
+                className="w-full py-3 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 font-black rounded-xl text-[10px] uppercase tracking-widest cursor-not-allowed"
+              >
+                Coming Soon to Play Store
+              </button>
+            </div>
+
             <div className="glass-panel p-6 rounded-2xl h-[450px] flex flex-col">
                <h2 className="text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-4">Discovery Stream</h2>
                <div className="flex-grow overflow-y-auto space-y-2 pr-2 custom-scrollbar font-mono text-[10px]">
@@ -421,6 +455,8 @@ const App: React.FC = () => {
         </div>
         <p className="text-gray-700 text-[9px] max-w-2xl mx-auto mt-4 px-4 leading-relaxed">
           DISCLAIMER: This application is for informational and entertainment purposes only. The data provided does not constitute financial, investment, or legal advice. Market conditions change rapidly; always conduct your own due diligence before making any financial decisions. Crosspector and its creators assume no liability for financial losses.
+          <br /><br />
+          Looking for more? <span className="text-yellow-500 font-bold">Crosspector Pro</span> on the Google Play Store offers extended capabilities including Crypto, Stocks, and Precious Metals Arbitrage with 50+ results per session. One-time payment, no sign-up, and subscriptionless.
         </p>
       </footer>
     </div>
