@@ -36,9 +36,14 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity })
           </h3>
         </div>
         <div className="flex flex-col items-end gap-2 relative">
-          <div className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${getRiskColor(opportunity.riskLevel)}`}>
-            {opportunity.riskLevel}
-          </div>
+          <a 
+            href="https://play.google.com/store/apps/details?id=com.crosspectorprov2.app&pcampaignid=web_share"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-2 py-0.5 rounded-full text-[10px] font-black border border-yellow-500/50 text-yellow-500 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors flex items-center gap-1"
+          >
+            <i className="fas fa-lock text-[8px]"></i> PRO
+          </a>
           <button 
             onClick={() => setIsShareOpen(!isShareOpen)}
             className="text-gray-500 hover:text-white transition-colors"
@@ -77,27 +82,32 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({ opportunity })
       </div>
 
       <div className="space-y-3 mt-auto">
-        <div className={`bg-black/40 rounded-xl p-3 border border-white/5 transition-all duration-500 ${isExpanded ? 'max-h-[1000px]' : 'max-h-32 overflow-hidden'}`}>
-          <div className="flex justify-between items-center mb-2">
-             <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Execution Protocol</p>
-             <button 
-               onClick={() => setIsExpanded(!isExpanded)}
-               className="text-[9px] font-black text-green-500 uppercase hover:underline"
-             >
-               {isExpanded ? 'Hide Details' : 'Expand Steps'}
-             </button>
+        <div className="bg-black/40 rounded-xl p-4 border border-white/5 relative overflow-hidden group/proto">
+          <div className="flex justify-between items-center mb-3">
+             <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2">
+               Execution Protocol
+               <span className="bg-yellow-500 text-black px-1 rounded text-[8px]">PRO</span>
+             </p>
           </div>
-          <ul className="space-y-2">
-            {(isExpanded ? opportunity.instructions : opportunity.instructions.slice(0, 2)).map((step, idx) => (
-              <li key={idx} className="text-[10px] text-gray-300 flex items-start animate-in fade-in slide-in-from-left-2">
-                <span className="mr-2 text-green-500 font-bold shrink-0">{idx + 1}.</span>
-                <span className="leading-normal">{step}</span>
-              </li>
-            ))}
-            {!isExpanded && opportunity.instructions.length > 2 && (
-              <li className="text-[9px] text-gray-500 italic mt-1">+ {opportunity.instructions.length - 2} more steps...</li>
-            )}
-          </ul>
+          <div className="space-y-2 relative">
+             {/* Blurred placeholder steps */}
+             <div className="space-y-2 opacity-20 select-none blur-[2px]">
+               <div className="flex items-center gap-2"><div className="w-3 h-3 bg-gray-700 rounded-full"></div><div className="h-2 bg-gray-700 rounded w-full"></div></div>
+               <div className="flex items-center gap-2"><div className="w-3 h-3 bg-gray-700 rounded-full"></div><div className="h-2 bg-gray-700 rounded w-3/4"></div></div>
+             </div>
+             
+             {/* Pro CTA Overlay */}
+             <div className="absolute inset-0 flex items-center justify-center">
+               <a 
+                 href="https://play.google.com/store/apps/details?id=com.crosspectorprov2.app&pcampaignid=web_share"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="px-4 py-1.5 bg-yellow-500 text-black font-black rounded-lg text-[9px] uppercase tracking-widest shadow-lg hover:scale-105 transition-transform"
+               >
+                 Unlock Strategy
+               </a>
+             </div>
+          </div>
         </div>
         
         <a 
